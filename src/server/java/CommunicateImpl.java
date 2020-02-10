@@ -59,8 +59,9 @@ public class CommunicateImpl extends UnicastRemoteObject implements Communicate 
             currArticle = Article;
         } catch (ServerNotActiveException e){
             System.out.println("Couldn't get Client IP");
+            return false;
         }
-        return false;
+        return true;
     }
 
     public boolean ping() throws RemoteException {

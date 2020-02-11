@@ -47,46 +47,40 @@ public class CommunicateImpl extends UnicastRemoteObject implements Communicate 
     }
 
     public boolean subscribe(String IP, int Port, String article) throws RemoteException {
-        // Map currently take the key as client IP address. I think we can use the key as type/originator/org value.
-        // Need to discuss
+        // Map currently take the key as client IP address and value as the list of subscriptions for the client.
         try{
             String clientIP = RemoteServer.getClientHost();
-            String[] fieldValues = article.split(";");
-            for(int i = 0; i < fieldValues.length; i++){
-                if(fieldValues[i] != ""){
-                    if(!clientSubscriptionList.containsKey(clientIP)){
-                        clientSubscriptionList.put(clientIP, new ArrayList<String>());
-                    }
-                    clientSubscriptionList.get(clientIP).add(fieldValues[i]);
-                }
+            if(!clientSubscriptionList.containsKey(clientIP)){
+                clientSubscriptionList.put(clientIP, new ArrayList<String>());
             }
-        } catch (ServerNotActiveException e) {
+            clientSubscriptionList.get(clientIP).add(article);
+        } catch (ServerNotActiveException e1) {
             System.out.println("Could not get Client IP");
             return false;
         }
-
         return true;
     }
 
     public boolean unSubscribe(String IP, int port, String article) throws RemoteException {
-        /*Key being type/originator/org makes sense because you can unsubscribe from a particular topic but
-        can still be subscribed to another one.
-        That's my understanding. We can discuss more on this.*/
+        /*A particular article can be removed from the list of subscriptions present for the client.
+          If the request article for unsubscribing does not match with the value present in the list,
+          we term it as invalid*/
         try{
             String clientIP = RemoteServer.getClientHost();
-            String[] fieldValues = article.split(";");
-            for(int i = 0; i < fieldValues.length; i++){
-                if(fieldValues[i] != ""){
-                    if(clientSubscriptionList.containsKey(clientIP)){
-                        ArrayList<String> clientSubscribedArticles = clientSubscriptionList.get(clientIP);
-                        clientSubscribedArticles.remove(fieldValues[i]);
-                        clientSubscriptionList.put(clientIP, clientSubscribedArticles);
-                    }
-                    else{
-                        System.out.println("Client is not subscribed!");
-                        return false;
-                    }
+            if(clientSubscriptionList.containsKey(clientIP)){
+                ArrayList<String> clientSubscribedArticles = clientSubscriptionList.get(clientIP);
+                if(clientSubscribedArticles.contains(article)){
+                    clientSubscribedArticles.remove(article);
+                    clientSubscriptionList.put(clientIP, clientSubscribedArticles);
                 }
+                else{
+                    System.out.println("Invalid unsubscribing request");
+                    return false;
+                }
+            }
+            else{
+                System.out.println("Client is not subscribed or has left the server already");
+                return false;
             }
         } catch (ServerNotActiveException e) {
             System.out.println("Could not get Client IP");

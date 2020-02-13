@@ -13,11 +13,11 @@ public class CommunicateImpl extends UnicastRemoteObject implements Communicate 
     }
 
     List<String> clientList = new ArrayList<String>();
-    Map<String,String> clientSubscription = new HashMap<String, String>();
 
     Map<String, ArrayList<String>> clientSubscriptionList = new HashMap<String, ArrayList<String>>();
     String currArticle;
 
+    //TODO: Change IPs as we work on UDP.
     public boolean join(String IP, int Port) throws RemoteException {
         System.out.println("Trying to join to server: " + IP + " at port: "+ String.valueOf(Port));
         try {
@@ -35,7 +35,7 @@ public class CommunicateImpl extends UnicastRemoteObject implements Communicate 
         try {
 
             String clientIP = RemoteServer.getClientHost();
-            clientSubscription.remove(clientIP);
+            clientSubscriptionList.remove(clientIP);
             clientList.remove(clientList.indexOf(clientIP));
             System.out.println("Client " + clientIP + " has left the building");
         } catch (ServerNotActiveException e) {
@@ -94,6 +94,8 @@ public class CommunicateImpl extends UnicastRemoteObject implements Communicate 
         try{
             String clientIP = RemoteServer.getClientHost();
             currArticle = Article;
+            List<String> subscribers = CommunicateHelper.getListOfClients(clientSubscriptionList, Article);
+            System.out.println("There are " + subscribers.size() + " clients who are subscribed to this article");
         } catch (ServerNotActiveException e){
             System.out.println("Couldn't get Client IP");
             return false;

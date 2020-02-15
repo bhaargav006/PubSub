@@ -1,5 +1,6 @@
 import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -14,9 +15,11 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 
-public class GroupServer  {
-    public static void main(String[] args) throws RemoteException, MalformedURLException, UnknownHostException {
 
+public class GroupServer  {
+    public static void main(String[] args) throws RemoteException, MalformedURLException, UnknownHostException, SocketException {
+
+        new GroupServerHeartbeat().start();
         LocateRegistry.createRegistry(1099);
         Communicate comm = new CommunicateImpl();
         Naming.rebind("server.comm", comm);

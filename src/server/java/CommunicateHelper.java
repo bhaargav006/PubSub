@@ -8,6 +8,7 @@ public class CommunicateHelper {
 
     static final int PACKAGE_SIZE = 1024;
 
+
     public static String generateSubRequest(String publishedArticle){
         StringBuilder generateString
                 = new StringBuilder("");
@@ -55,7 +56,7 @@ public class CommunicateHelper {
         return clientList;
     }
 
-    public static void udpToRemoteServer(String message){
+    public static void udpToRegistServer(String message){
         try {
             DatagramSocket ds = new DatagramSocket();
             byte[] b = message.getBytes();
@@ -77,10 +78,9 @@ public class CommunicateHelper {
             DatagramSocket ds = new DatagramSocket();
             byte[] b = new byte[PACKAGE_SIZE];
             b = message.getBytes();
-
             for(int i=0;i<subscribers.size();i++){
                 InetAddress address = InetAddress.getByName(subscribers.get(i));
-                DatagramPacket dp = new DatagramPacket(b,b.length,address, portLookup.get(subscribers.get(i)));
+                DatagramPacket dp = new DatagramPacket(b,b.length,address, 9999);
                 ds.send(dp);
             }
         } catch (SocketException | UnknownHostException e) {

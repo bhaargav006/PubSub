@@ -1,6 +1,7 @@
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
+import java.rmi.AlreadyBoundException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -10,8 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 public class GroupServer  {
-    public static void main(String[] args) throws RemoteException, MalformedURLException, UnknownHostException {
 
+    public static void main(String[] args) throws RemoteException, MalformedURLException, UnknownHostException, AlreadyBoundException {
 
 
         LocateRegistry.createRegistry(1099);
@@ -28,7 +29,7 @@ public class GroupServer  {
         request.append(ib.getHostAddress());
 
         request.append(";9999;server.comm;1099");
-        CommunicateHelper.udpToRemoteServer(request.toString());
+        //CommunicateHelper.udpToRemoteServer(request.toString());
 
         System.out.println("You have been served");
 

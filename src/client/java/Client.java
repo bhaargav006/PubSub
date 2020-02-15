@@ -13,21 +13,41 @@ public class Client {
 
         //Needs to get Server IP and Port from Registry Server
 
+
         new PublishedClient().start();
 
-//        Registry registry = LocateRegistry.getRegistry("10.131.123.169");
-//        Communicate comm = (Communicate) registry.lookup("server.comm");
-//        comm.ping();
-//
-//        InetAddress ia = InetAddress.getLocalHost();
-//        comm.join(ia.getHostAddress(),1099);
-//        comm.subscribe(ia.getHostAddress(),1099, "Science;;UMN;");
-//        comm.subscribe(ia.getHostAddress(),1099, "Lifestyle;Bhaargav;UMN;");
-//        comm.unSubscribe(ia.getHostAddress(),1099, "Lifestyle;Bhaargav;UMN;");
-//        comm.leave(ia.getHostAddress(),1099);
+        //Getlist from the remote registry
+        //“GetList;RMI;IP;Port”
+
+        StringBuilder getListRequest = new StringBuilder("");
+        getListRequest.append("GetList;RMI;");
+        InetAddress ia = InetAddress.getLocalHost();
+        getListRequest.append(ia.getHostAddress());
+        getListRequest.append(";9999");
+
+        CommunicateHelper.udpToRemoteServer(getListRequest.toString());
+
+        //Listen to remote server and get a list
+
+
 
         System.out.println("I am done - Client");
 
+
+
+        //System.setSecurityManager(new RMISecurityManager());
+        Registry registry = LocateRegistry.getRegistry("localhost");
+        Communicate comm = (Communicate) registry.lookup("server.comm");
+        comm.ping();
+
+        comm.join(ia.getHostAddress(),1099);
+        comm.subscribe(ia.getHostAddress(),1099, "Science;;UMN;");
+        comm.subscribe(ia.getHostAddress(),1099, "Lifestyle;Bhaargav;UMN;");
+        comm.unSubscribe(ia.getHostAddress(),1099, "Lifestyle;Bhaargav;UMN;");
+
+
+        //comm.publish("",ia.getHostAddress(),1099);
+        comm.leave(ia.getHostAddress(),1099);
 
     }
 }

@@ -1,3 +1,5 @@
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.server.RemoteServer;
 import java.rmi.server.ServerNotActiveException;
@@ -21,10 +23,10 @@ public class CommunicateImpl extends UnicastRemoteObject implements Communicate 
         System.out.println("Join request from Client: " + IP + " at port: "+ String.valueOf(Port));
         try {
             clientList.put(IP,Port);
-            System.out.println("Server IP is " + RemoteServer.getClientHost());
-        } catch (ServerNotActiveException e) {
-            System.out.println("Couldn't get Client IP");
-            return false;
+            InetAddress iServer = InetAddress.getLocalHost();
+            System.out.println("Server IP is " + iServer.getHostAddress());
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
         }
         return true;
     }

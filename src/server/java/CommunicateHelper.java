@@ -56,14 +56,14 @@ public class CommunicateHelper {
         return clientList;
     }
 
-    public static void udpToRegistServer(String message){
+    public static void udpToRemoteServer(String message){
         try {
             DatagramSocket ds = new DatagramSocket();
             byte[] b = message.getBytes();
 
             //IP and Port, not so sure.
             InetAddress ir = InetAddress.getLocalHost();
-            DatagramPacket dp = new DatagramPacket(b,b.length, ir, 9999);
+            DatagramPacket dp = new DatagramPacket(b,b.length, ir, 5105);
             ds.send(dp);
         } catch (SocketException | UnknownHostException e) {
             System.out.println("Socket Exception trying to connect to Remote Server");

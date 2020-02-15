@@ -30,8 +30,9 @@ public class GroupServer  {
         InetAddress ib = InetAddress.getLocalHost();
         request.append(ib.getHostAddress());
 
+
         request.append(";9999;server.comm;1099");
-        CommunicateHelper.udpToRegistServer(request.toString());
+        CommunicateHelper.udpToRemoteServer(request.toString());
 
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         Runnable task = new Runnable() {
@@ -48,7 +49,7 @@ public class GroupServer  {
                     e.printStackTrace();
                 }
                 deregisterRequest.append(";9999");
-                CommunicateHelper.udpToRegistServer(deregisterRequest.toString());
+                CommunicateHelper.udpToRemoteServer(deregisterRequest.toString());
                 try {
                     Naming.unbind("server.comm");
                 } catch (RemoteException | NotBoundException | MalformedURLException e) {
@@ -63,6 +64,14 @@ public class GroupServer  {
         int delay = 60;
         scheduler.schedule(task, delay, TimeUnit.SECONDS);
         scheduler.shutdown();
+
+        request.append(";5105;server.comm;1099");
+        CommunicateHelper.udpToRemoteServer(request.toString());
+
+        System.out.println("You have been served");
+
+        //Deregister the server
+
 
     }
 }

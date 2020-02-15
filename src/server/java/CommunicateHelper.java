@@ -63,7 +63,7 @@ public class CommunicateHelper {
 
             //IP and Port, not so sure.
             InetAddress ir = InetAddress.getLocalHost();
-            DatagramPacket dp = new DatagramPacket(b,b.length, ir, 9999);
+            DatagramPacket dp = new DatagramPacket(b,b.length, ir, 5105);
             ds.send(dp);
         } catch (SocketException | UnknownHostException e) {
             System.out.println("Socket Exception trying to connect to Remote Server");

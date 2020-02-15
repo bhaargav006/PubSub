@@ -1,4 +1,6 @@
+import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -6,14 +8,22 @@ import java.rmi.registry.Registry;
 
 public class Client {
 
-    public static void main(String[] args) throws RemoteException, MalformedURLException, NotBoundException {
+    public static void main(String[] args) throws RemoteException, MalformedURLException, NotBoundException, UnknownHostException {
+
+        //Needs to get Server IP and Port from Registry Server
+
+
+
         Registry registry = LocateRegistry.getRegistry("localhost");
         Communicate comm = (Communicate) registry.lookup("server.comm");
         comm.ping();
 
-        comm.join("localhost",1099);
-        // why do you need ip and host ? Is it going to be used by udp? Does that mean that is the client's ?
-        comm.leave("localhost",1099);
+        InetAddress ia = InetAddress.getLocalHost();
+        comm.join(ia.getHostAddress(),1099);
+        comm.subscribe(ia.getHostAddress(),1099, "Science;;UMN;");
+        comm.subscribe(ia.getHostAddress(),1099, "Lifestyle;Bhaargav;UMN;");
+        comm.unSubscribe(ia.getHostAddress(),1099, "Lifestyle;Bhaargav;UMN;");
+        comm.leave(ia.getHostAddress(),1099);
 
         System.out.println("I am done - Client");
     }

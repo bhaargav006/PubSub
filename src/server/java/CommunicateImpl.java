@@ -12,17 +12,16 @@ public class CommunicateImpl extends UnicastRemoteObject implements Communicate 
     protected CommunicateImpl() throws RemoteException {
     }
 
-    List<String> clientList = new ArrayList<String>();
+    Map<String, Integer> clientList = new HashMap<String, Integer>();
 
     Map<String, ArrayList<String>> clientSubscriptionList = new HashMap<String, ArrayList<String>>();
     String currArticle;
 
-    //TODO: Change IPs as we work on UDP.
     public boolean join(String IP, int Port) throws RemoteException {
-        System.out.println("Trying to join to server: " + IP + " at port: "+ String.valueOf(Port));
+        System.out.println("Join request from Client: " + IP + " at port: "+ String.valueOf(Port));
         try {
-            clientList.add(RemoteServer.getClientHost());
-            System.out.println("IP is " + RemoteServer.getClientHost());
+            clientList.put(IP,Port);
+            System.out.println("Server IP is " + RemoteServer.getClientHost());
         } catch (ServerNotActiveException e) {
             System.out.println("Couldn't get Client IP");
             return false;
@@ -31,12 +30,12 @@ public class CommunicateImpl extends UnicastRemoteObject implements Communicate 
     }
 
     public boolean leave(String IP, int Port) throws RemoteException {
-        System.out.println("Trying to leave from server: " + IP + " at port: "+ String.valueOf(Port));
+        System.out.println("Leave request from Client: " + IP + " at port: "+ String.valueOf(Port));
         try {
 
             String clientIP = RemoteServer.getClientHost();
             clientSubscriptionList.remove(clientIP);
-            clientList.remove(clientList.indexOf(clientIP));
+            clientList.remove(clientIP);
             System.out.println("Client " + clientIP + " has left the building");
         } catch (ServerNotActiveException e) {
             System.out.println("Couldn't get Client IP");
@@ -48,12 +47,16 @@ public class CommunicateImpl extends UnicastRemoteObject implements Communicate 
 
     public boolean subscribe(String IP, int Port, String article) throws RemoteException {
         // Map currently take the key as client IP address and value as the list of subscriptions for the client.
+        // If mapping already exists, dont add? -> can add this feature
         try{
+            //The client doesn't need the IP to connect. We can only figure this out when we
+            //test it in multiple machines
             String clientIP = RemoteServer.getClientHost();
             if(!clientSubscriptionList.containsKey(clientIP)){
                 clientSubscriptionList.put(clientIP, new ArrayList<String>());
             }
             clientSubscriptionList.get(clientIP).add(article);
+            System.out.println("Client: " + clientIP + " is subscribed to " + article);
         } catch (ServerNotActiveException e1) {
             System.out.println("Could not get Client IP");
             return false;
@@ -72,6 +75,7 @@ public class CommunicateImpl extends UnicastRemoteObject implements Communicate 
                 if(clientSubscribedArticles.contains(article)){
                     clientSubscribedArticles.remove(article);
                     clientSubscriptionList.put(clientIP, clientSubscribedArticles);
+                    System.out.println("Client: " + clientIP + " is unsubscribed from " + article);
                 }
                 else{
                     System.out.println("Invalid unsubscribing request");
@@ -96,6 +100,10 @@ public class CommunicateImpl extends UnicastRemoteObject implements Communicate 
             currArticle = Article;
             List<String> subscribers = CommunicateHelper.getListOfClients(clientSubscriptionList, Article);
             System.out.println("There are " + subscribers.size() + " clients who are subscribed to this article");
+
+            //InetAddress address = InetAddress.getByName("192.168.1.106");
+            CommunicateHelper.udpToClients(subscribers, clientList, CommunicateHelper.getMessage(Article));
+
         } catch (ServerNotActiveException e){
             System.out.println("Couldn't get Client IP");
             return false;

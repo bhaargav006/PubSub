@@ -8,6 +8,9 @@ public class CommunicateHelper {
 
     static final int PACKAGE_SIZE = 1024;
 
+    public static void main(String[] args) {
+        udpToClients(null, null, "s");
+    }
 
     public static String generateSubRequest(String publishedArticle){
         StringBuilder generateString
@@ -77,12 +80,16 @@ public class CommunicateHelper {
         try {
             DatagramSocket ds = new DatagramSocket();
             byte[] b = new byte[PACKAGE_SIZE];
+            message = "UDP change";
             b = message.getBytes();
-            for(int i=0;i<subscribers.size();i++){
-                InetAddress address = InetAddress.getByName(subscribers.get(i));
-                DatagramPacket dp = new DatagramPacket(b,b.length,address, 9999);
-                ds.send(dp);
-            }
+            InetAddress address = InetAddress.getByName("10.131.123.169");
+            DatagramPacket dp = new DatagramPacket(b,b.length,address, 9999);
+            ds.send(dp);
+//            for(int i=0;i<subscribers.size();i++){
+//                InetAddress address = InetAddress.getByName(subscribers.get(i));
+//                DatagramPacket dp = new DatagramPacket(b,b.length,address, 9999);
+//                ds.send(dp);
+//            }
         } catch (SocketException | UnknownHostException e) {
             System.out.println("Socket error while sending UDP packets to Clients");
         } catch (IOException e) {

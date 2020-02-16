@@ -19,13 +19,13 @@ public class Client {
         //Getlist from the remote registry
         //“GetList;RMI;IP;Port”
 
-        StringBuilder getListRequest = new StringBuilder("");
-        getListRequest.append("GetList;RMI;");
-        InetAddress ia = InetAddress.getLocalHost();
-        getListRequest.append(ia.getHostAddress());
-        getListRequest.append(";9999");
-
-        CommunicateHelper.udpToRemoteServer(getListRequest.toString());
+//        StringBuilder getListRequest = new StringBuilder("");
+//        getListRequest.append("GetList;RMI;");
+//        InetAddress ia = InetAddress.getLocalHost();
+//        getListRequest.append(ia.getHostAddress());
+//        getListRequest.append(";9999");
+//
+//        CommunicateHelper.udpToRemoteServer(getListRequest.toString());
 
         //Listen to remote server and get a list
 
@@ -36,18 +36,18 @@ public class Client {
 
 
         //System.setSecurityManager(new RMISecurityManager());
-        Registry registry = LocateRegistry.getRegistry("localhost");
-        Communicate comm = (Communicate) registry.lookup("server.comm");
-        comm.ping();
-
-        comm.join(ia.getHostAddress(),1099);
-        comm.subscribe(ia.getHostAddress(),1099, "Science;;UMN;");
-        comm.subscribe(ia.getHostAddress(),1099, "Lifestyle;Bhaargav;UMN;");
-        comm.unSubscribe(ia.getHostAddress(),1099, "Lifestyle;Bhaargav;UMN;");
-
-
-        //comm.publish("",ia.getHostAddress(),1099);
-        comm.leave(ia.getHostAddress(),1099);
+//        Registry registry = LocateRegistry.getRegistry("localhost");
+//        Communicate comm = (Communicate) registry.lookup("server.comm");
+//        comm.ping();
+//
+//        comm.join(ia.getHostAddress(),1099);
+//        comm.subscribe(ia.getHostAddress(),1099, "Science;;UMN;");
+//        comm.subscribe(ia.getHostAddress(),1099, "Lifestyle;Bhaargav;UMN;");
+//        comm.unSubscribe(ia.getHostAddress(),1099, "Lifestyle;Bhaargav;UMN;");
+//
+//
+//        //comm.publish("",ia.getHostAddress(),1099);
+//        comm.leave(ia.getHostAddress(),1099);
 
     }
 }

@@ -10,7 +10,7 @@ public class GroupServerHeartbeat extends Thread {
     private byte[] buf = new byte[256];
 
     public GroupServerHeartbeat() throws SocketException {
-        socket = new DatagramSocket(5105);
+        socket = new DatagramSocket(9999);
     }
 
     public void run() {

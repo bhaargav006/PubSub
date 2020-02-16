@@ -1,24 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6b1357ca-6d24-4ae0-90fd-ce1af3fa4f4c" name="Default" comment="">
+    <list default="true" id="85c93cb0-ebad-473e-8969-d905ef247100" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/client/java/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/java/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Client.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Communicate.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/CommunicateHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/CommunicateImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/GroupServer$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/GroupServer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/PACKAGE_NAME/testclient.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/PACKAGE_NAME/testmain.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/PublishedClient.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/testclient.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/testres" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/testserver.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/PACKAGE_NAME/DumbClient.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server/java/GroupServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/java/GroupServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server/java/GroupServerHeartbeat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/java/GroupServerHeartbeat.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,6 +49,7 @@
     <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -121,8 +109,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Client" />
         <item itemvalue="Application.CommunicateHelper" />
+        <item itemvalue="Application.Client" />
       </list>
     </recent_temporary>
   </component>
@@ -172,25 +160,21 @@
     <option name="LAST_COMMIT_MESSAGE" value="part 2 of setup" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="569" y="324" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog" timestamp="1581809115338">
+    <state width="1398" height="207" key="GridCell.Tab.0.bottom" timestamp="1581813564474">
       <screen x="0" y="23" width="1440" height="811" />
     </state>
-    <state x="569" y="324" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.23.1440.811@0.23.1440.811" timestamp="1581809115338" />
-    <state width="1398" height="207" key="GridCell.Tab.0.bottom" timestamp="1581811677862">
+    <state width="1398" height="207" key="GridCell.Tab.0.bottom/0.23.1440.811@0.23.1440.811" timestamp="1581813564474" />
+    <state width="1398" height="207" key="GridCell.Tab.0.center" timestamp="1581813564473">
       <screen x="0" y="23" width="1440" height="811" />
     </state>
-    <state width="1398" height="207" key="GridCell.Tab.0.bottom/0.23.1440.811@0.23.1440.811" timestamp="1581811677862" />
-    <state width="1398" height="207" key="GridCell.Tab.0.center" timestamp="1581811677861">
+    <state width="1398" height="207" key="GridCell.Tab.0.center/0.23.1440.811@0.23.1440.811" timestamp="1581813564473" />
+    <state width="1398" height="207" key="GridCell.Tab.0.left" timestamp="1581813564472">
       <screen x="0" y="23" width="1440" height="811" />
     </state>
-    <state width="1398" height="207" key="GridCell.Tab.0.center/0.23.1440.811@0.23.1440.811" timestamp="1581811677861" />
-    <state width="1398" height="207" key="GridCell.Tab.0.left" timestamp="1581811677861">
+    <state width="1398" height="207" key="GridCell.Tab.0.left/0.23.1440.811@0.23.1440.811" timestamp="1581813564472" />
+    <state width="1398" height="207" key="GridCell.Tab.0.right" timestamp="1581813564473">
       <screen x="0" y="23" width="1440" height="811" />
     </state>
-    <state width="1398" height="207" key="GridCell.Tab.0.left/0.23.1440.811@0.23.1440.811" timestamp="1581811677861" />
-    <state width="1398" height="207" key="GridCell.Tab.0.right" timestamp="1581811677862">
-      <screen x="0" y="23" width="1440" height="811" />
-    </state>
-    <state width="1398" height="207" key="GridCell.Tab.0.right/0.23.1440.811@0.23.1440.811" timestamp="1581811677862" />
+    <state width="1398" height="207" key="GridCell.Tab.0.right/0.23.1440.811@0.23.1440.811" timestamp="1581813564473" />
   </component>
 </project>

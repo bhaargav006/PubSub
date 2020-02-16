@@ -19,13 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class GroupServer  {
     public static void main(String[] args) throws RemoteException, MalformedURLException, UnknownHostException, SocketException {
 
-        new GroupServerHeartbeat().start();
-        LocateRegistry.createRegistry(1099);
-        Communicate comm = new CommunicateImpl();
-        Naming.rebind("server.comm", comm);
-
-        //Need to register to Registry server
-        // Format is “Register;RMI;IP;Port;BindingName;Port for RMI”
+        //Register
 
         final StringBuilder request = new StringBuilder("");
         request.append("Register;RMI;");
@@ -36,6 +30,18 @@ public class GroupServer  {
 
         request.append(";9999;server.comm;1099");
         CommunicateHelper.udpToRemoteServer(request.toString());
+
+        //Heartbeat
+
+        new GroupServerHeartbeat().start();
+        LocateRegistry.createRegistry(1099);
+        Communicate comm = new CommunicateImpl();
+        Naming.rebind("server.comm", comm);
+
+        //Need to register to Registry server
+        // Format is “Register;RMI;IP;Port;BindingName;Port for RMI”
+
+
 
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         Runnable task = new Runnable() {
@@ -64,14 +70,14 @@ public class GroupServer  {
 
         System.out.println("You have been served");
 
-        int delay = 60;
-        scheduler.schedule(task, delay, TimeUnit.SECONDS);
-        scheduler.shutdown();
-
-        request.append(";5105;server.comm;1099");
-        CommunicateHelper.udpToRemoteServer(request.toString());
-
-        System.out.println("You have been served");
+//        int delay = 60;
+//        scheduler.schedule(task, delay, TimeUnit.SECONDS);
+//        scheduler.shutdown();
+//
+//        request.append(";5105;server.comm;1099");
+//        CommunicateHelper.udpToRemoteServer(request.toString());
+//
+//        System.out.println("You have been served");
 
         //Deregister the server
 

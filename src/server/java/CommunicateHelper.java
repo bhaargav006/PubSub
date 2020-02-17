@@ -12,45 +12,45 @@ public class CommunicateHelper {
         udpToClients(null, null, "s");
     }
 
-    public static String generateSubRequest(String publishedArticle){
+    public static String generateSubRequest(String publishedArticle) {
         StringBuilder generateString
                 = new StringBuilder("");
         String[] fieldValues = publishedArticle.split(";");
-        for(int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             generateString.append(fieldValues[i]);
             generateString.append(";");
         }
         return generateString.toString();
     }
 
-    public static Boolean checkAllCases(String toCheck, String article){
+    public static Boolean checkAllCases(String toCheck, String article) {
 
         String[] toCheckValues = toCheck.split(";");
         String[] articleValues = article.split(";");
         // No match only if not null and mismatch
-        for(int i=0;i< toCheckValues.length;i++){
-            if (articleValues[i]!="" && !(toCheckValues[i].equalsIgnoreCase(articleValues[i]))){
+        for (int i = 0; i < toCheckValues.length; i++) {
+            if (articleValues[i] != "" && !(toCheckValues[i].equalsIgnoreCase(articleValues[i]))) {
                 return false;
             }
         }
         return true;
     }
 
-    public static Boolean isClientSubscribed(ArrayList<String> clientSubscribedArticles, String toCheck){
-        for(int i=0;i<clientSubscribedArticles.size();i++){
-            if(checkAllCases(clientSubscribedArticles.get(i),toCheck))
+    public static Boolean isClientSubscribed(ArrayList<String> clientSubscribedArticles, String toCheck) {
+        for (int i = 0; i < clientSubscribedArticles.size(); i++) {
+            if (checkAllCases(clientSubscribedArticles.get(i), toCheck))
                 return true;
         }
         return false;
     }
 
-    public static ArrayList<String> getListOfClients(Map<String, ArrayList<String>> clientSubscriptionList, String article){
+    public static ArrayList<String> getListOfClients(Map<String, ArrayList<String>> clientSubscriptionList, String article) {
         ArrayList<String> clientList;
         clientList = new ArrayList<String>();
         String toCheck = generateSubRequest(article);
 
-        for(int i=0;i<clientSubscriptionList.size();i++){
-            if(isClientSubscribed(clientSubscriptionList.get(i),toCheck)) {
+        for (int i = 0; i < clientSubscriptionList.size(); i++) {
+            if (isClientSubscribed(clientSubscriptionList.get(i), toCheck)) {
                 //Adding IP of client to the list
                 clientList.add(String.valueOf(clientSubscriptionList.keySet().toArray()[i]));
             }
@@ -59,15 +59,25 @@ public class CommunicateHelper {
         return clientList;
     }
 
-    public static void udpToRemoteServer(String message){
+    public static void udpToRemoteServer(String message) {
+        byte[] buf = new byte[1024];
         try {
             DatagramSocket ds = new DatagramSocket();
             byte[] b = message.getBytes();
 
             //IP and Port, not so sure.
-            InetAddress ir = InetAddress.getLocalHost();
-            DatagramPacket dp = new DatagramPacket(b,b.length, ir, 5105);
+            InetAddress ir = InetAddress.getByName("10.131.123.169");
+            DatagramPacket dp = new DatagramPacket(b, b.length, ir, 5105);
             ds.send(dp);
+            boolean running = true;
+
+            dp = new DatagramPacket(buf, buf.length);
+            ds.receive(dp);
+            String received
+                    = new String(dp.getData(), 0, dp.getLength());
+            System.out.print(received);
+
+
         } catch (SocketException | UnknownHostException e) {
             System.out.println("Socket Exception trying to connect to Remote Server");
         } catch (IOException e) {
@@ -83,7 +93,7 @@ public class CommunicateHelper {
             message = "UDP change";
             b = message.getBytes();
             InetAddress address = InetAddress.getByName("10.131.123.169");
-            DatagramPacket dp = new DatagramPacket(b,b.length,address, 9999);
+            DatagramPacket dp = new DatagramPacket(b, b.length, address, 9999);
             ds.send(dp);
 //            for(int i=0;i<subscribers.size();i++){
 //                InetAddress address = InetAddress.getByName(subscribers.get(i));
@@ -100,6 +110,6 @@ public class CommunicateHelper {
 
     public static String getMessage(String article) {
         String[] fieldValues = article.split(";");
-        return fieldValues[fieldValues.length-1];
+        return fieldValues[fieldValues.length - 1];
     }
 }

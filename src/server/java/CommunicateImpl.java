@@ -48,6 +48,10 @@ public class CommunicateImpl extends UnicastRemoteObject implements Communicate 
     }
 
     public boolean subscribe(String IP, int Port, String article) throws RemoteException {
+        if(!CommunicateHelper.validateString(article)){
+            System.out.println("Invalid subscribe request: " + article);
+            return false;
+        }
         // Map currently take the key as client IP address and value as the list of subscriptions for the client.
         // If mapping already exists, dont add? -> can add this feature
         try{
@@ -96,6 +100,10 @@ public class CommunicateImpl extends UnicastRemoteObject implements Communicate 
     }
 
     public boolean publish(String Article, String IP, int Port) throws RemoteException {
+        if(!CommunicateHelper.validateString(Article)){
+            System.out.println("Invalid publish request: " + Article);
+            return false;
+        }
         System.out.println("Publishing article: " + Article + " to server: "+ IP + " at port: "+ Port);
         try{
             String clientIP = RemoteServer.getClientHost();

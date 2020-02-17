@@ -1,12 +1,17 @@
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 public class CommunicateHelper {
 
     static final int PACKAGE_SIZE = 1024;
+    static final ArrayList<String> typeField = new ArrayList<String>(
+            Arrays.asList("Sports", "Lifestyle", "Entertainment", "Business", "Technology", "Science", "Politics", "Health"));
 
     public static void main(String[] args) {
         udpToClients(null, null, "s");
@@ -101,5 +106,40 @@ public class CommunicateHelper {
     public static String getMessage(String article) {
         String[] fieldValues = article.split(";");
         return fieldValues[fieldValues.length-1];
+    }
+
+    public static Boolean validateString(String article) {
+        int count = 0;
+        String[] stringToCheck = article.split(";");
+        if(stringToCheck.length <= 0)
+            return false;
+        if(stringToCheck.length > 3) {
+            if(stringToCheck[3].trim() != "")
+                return false;
+        }
+        if(!typeField.contains(stringToCheck[0].trim()))
+            return false;
+        for(String string: stringToCheck){
+            count += string.trim().length();
+        }
+        if(count == 0)
+            return false;
+        return true;
+    }
+
+    public Boolean validatePublisherString(String article) {
+        String[] stringToCheck = article.split(";");
+        if(stringToCheck.length <= 0)
+            return false;
+        if(stringToCheck.length == 4){
+            if(stringToCheck[3].trim().length() == 0)
+                return false;
+            if(stringToCheck[0].trim() == "" && stringToCheck[1].trim() == "" && stringToCheck[2].trim() == "")
+                return false;
+        }
+        else
+            return false;
+
+        return true;
     }
 }

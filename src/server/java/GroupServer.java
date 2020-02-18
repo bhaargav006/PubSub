@@ -2,10 +2,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
+import java.rmi.AlreadyBoundException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 
 public class GroupServer  {
-    public static void main(String[] args) throws RemoteException, MalformedURLException, UnknownHostException, SocketException {
+    public static void main(String[] args) throws RemoteException, MalformedURLException, UnknownHostException, SocketException, AlreadyBoundException {
 
        final String ipRegistry = args[0];
         //Register
@@ -59,10 +61,10 @@ public class GroupServer  {
         //Heartbeat
 
         new GroupServerHeartbeat().start();
-        LocateRegistry.createRegistry(1099);
+        Registry r = LocateRegistry.createRegistry(1099);
         Communicate comm = new CommunicateImpl();
        // Communicate communicate = (Communicate) UnicastRemoteObject.exportObject(comm, 0);
-        Naming.rebind("server.comm", comm);
+        r.bind("server.comm", comm);
 
         //Need to register to Registry server
         // Format is “Register;RMI;IP;Port;BindingName;Port for RMI”

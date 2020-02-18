@@ -26,13 +26,14 @@ public class Client {
         StringBuilder getListRequest = new StringBuilder("");
         getListRequest.append("GetList;RMI;");
         InetAddress ia = InetAddress.getLocalHost();
-        getListRequest.append(ia.getHostAddress());
+        getListRequest.append("134.84.182.48");
         getListRequest.append(";1098");
 
         String ipAddressOfGSrvs = CommunicateHelper.udpToAndFromRemoteServer(getListRequest.toString());
         String [] splitAdresses = ipAddressOfGSrvs.split(";");
         List<String>ipAddrAndPort = new ArrayList<>();
         for(int i = 0; i < splitAdresses.length; i=i+2) {
+            if(i+1 >= splitAdresses.length ) continue;
             ipAddrAndPort.add(splitAdresses[i]+":"+splitAdresses[i+1]);
         }
         //Listen to remote server and get a listen
@@ -44,13 +45,14 @@ public class Client {
         String grpServerIP = null;
         int port = 0;
         while(!joinAllowed) {
+            if(ipAddrAndPort.size() <= i) break;
             String[] addr = ipAddrAndPort.get(i).split(":");
             grpServerIP = addr[0];
             port = Integer.parseInt(addr[1]);
             registry = LocateRegistry.getRegistry(grpServerIP);
             comm = (Communicate) registry.lookup("server.comm");
 
-            joinAllowed = comm.join(grpServerIP,port);
+            joinAllowed = comm.join("134.84.182.48",1098);
             i++;
         }
         comm.ping();

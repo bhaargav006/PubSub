@@ -84,7 +84,7 @@ public class CommunicateHelper {
             byte[] b = message.getBytes();
 
             //IP and Port, not so sure.
-            InetAddress ir = InetAddress.getByName("10.131.193.209");
+            InetAddress ir = InetAddress.getByName("134.84.182.49");
             DatagramPacket dp = new DatagramPacket(b, b.length, ir, 5105);
             ds.send(dp);
             return ds;
@@ -118,8 +118,15 @@ public class CommunicateHelper {
     }
 
     public static String getMessage(String article) {
+        if(article.length() >120) {
+            article = article.substring(0,120);
+        }
+        else if (article.length() < 120) {
+            article = String.format("%1$-120s", article);
+        }
         String[] fieldValues = article.split(";");
         return fieldValues[fieldValues.length-1];
+
     }
 
     public static Boolean validateString(String article) {

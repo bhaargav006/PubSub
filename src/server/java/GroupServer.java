@@ -25,7 +25,7 @@ public class GroupServer  {
         request.append("Register;RMI;");
 
         InetAddress ib = InetAddress.getLocalHost();
-        request.append(ib.getHostAddress());
+        request.append("134.84.182.45");
 
 
         request.append(";9999;server.comm;1099");

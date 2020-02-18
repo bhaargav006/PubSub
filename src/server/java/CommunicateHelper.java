@@ -141,7 +141,7 @@ public class CommunicateHelper {
         return true;
     }
 
-    public Boolean validatePublisherString(String article) {
+    public static Boolean validatePublisherString(String article) {
         String[] stringToCheck = article.split(";");
         if(stringToCheck.length <= 0)
             return false;

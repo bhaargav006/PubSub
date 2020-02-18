@@ -19,45 +19,39 @@ public class CommunicateImpl extends UnicastRemoteObject implements Communicate 
     Map<String, ArrayList<String>> clientSubscriptionList = new HashMap<String, ArrayList<String>>();
     String currArticle;
 
-    public boolean join(String IP, int Port) throws RemoteException {
-        System.out.println("Join request from Client: " + IP + " at port: "+ String.valueOf(Port));
-        try {
-            clientList.put(IP,Port);
-            InetAddress iServer = InetAddress.getLocalHost();
-            System.out.println("Server IP is " + iServer.getHostAddress());
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
+    static final int MAX_CLIENTS = 20;
 
-    public boolean leave(String IP, int Port) throws RemoteException {
-        System.out.println("Leave request from Client: " + IP + " at port: "+ String.valueOf(Port));
-        try {
-
-            String clientIP = RemoteServer.getClientHost();
-            clientSubscriptionList.remove(clientIP);
-            clientList.remove(clientIP);
-            System.out.println("Client " + clientIP + " has left the building");
-        } catch (ServerNotActiveException e) {
-            System.out.println("Couldn't get Client IP");
+    public boolean join(String IP, int Port) {
+        System.out.println("Join request from Client: " + IP + " at port: "+ Port);
+        if(clientList.size() == MAX_CLIENTS){
+            System.out.println("Reached maximum number of clients");
             return false;
         }
 
+        if(clientList.get(IP) != null){
+            clientList.remove(IP);
+        }
+        clientList.put(IP,Port);
+
         return true;
     }
 
-    public boolean subscribe(String IP, int Port, String article) throws RemoteException {
+    public boolean leave(String IP, int Port) {
+        System.out.println("Leave request from Client: " + IP + " at port: "+ Port);
+
+        clientSubscriptionList.remove(IP);
+        clientList.remove(IP);
+        System.out.println("Client " + IP + " has left the building");
+
+        return true;
+    }
+
+    public boolean subscribe(String IP, int Port, String article) {
         if(!CommunicateHelper.validateString(article)){
             System.out.println("Invalid subscribe request: " + article);
             return false;
         }
-        // Map currently take the key as client IP address and value as the list of subscriptions for the client.
-        // If mapping already exists, dont add? -> can add this feature
 
-        //The client doesn't need the IP to connect. We can only figure this out when we
-        //test it in multiple machines
-        //String clientIP = RemoteServer.getClientHost();
         if(!clientSubscriptionList.containsKey(IP)){
             clientSubscriptionList.put(IP, new ArrayList<String>());
         }
@@ -67,7 +61,7 @@ public class CommunicateImpl extends UnicastRemoteObject implements Communicate 
         return true;
     }
 
-    public boolean unSubscribe(String IP, int port, String article) throws RemoteException {
+    public boolean unSubscribe(String IP, int port, String article) {
         /*A particular article can be removed from the list of subscriptions present for the client.
           If the request article for unsubscribing does not match with the value present in the list,
           we term it as invalid*/
@@ -93,29 +87,22 @@ public class CommunicateImpl extends UnicastRemoteObject implements Communicate 
         return true;
     }
 
-    public boolean publish(String Article, String IP, int Port) throws RemoteException {
-//        if(!CommunicateHelper.validateString(Article)){
-//            System.out.println("Invalid publish request: " + Article);
-//            return false;
-//        }
-        System.out.println("Publishing article: " + Article );
-        try{
-            String clientIP = RemoteServer.getClientHost();
-            currArticle = Article;
-            List<String> subscribers = CommunicateHelper.getListOfClients(clientSubscriptionList, Article);
-            System.out.println("There are " + subscribers.size() + " clients who are subscribed to this article");
-
-            //InetAddress address = InetAddress.getByName("192.168.1.106");
-            CommunicateHelper.udpToClients(subscribers, clientList, CommunicateHelper.getMessage(Article));
-
-        } catch (ServerNotActiveException e){
-            System.out.println("Couldn't get Client IP");
+    public boolean publish(String Article, String IP, int Port) {
+        if(!CommunicateHelper.validatePublisherString(Article)){
+            System.out.println("Invalid publish request: " + Article);
             return false;
         }
+
+        currArticle = Article;
+        List<String> subscribers = CommunicateHelper.getListOfClients(clientSubscriptionList, Article);
+        System.out.println("There are " + subscribers.size() + " clients who are subscribed to this article");
+
+        CommunicateHelper.udpToClients(subscribers, clientList, CommunicateHelper.getMessage(Article));
+
         return true;
     }
 
-    public boolean ping() throws RemoteException {
+    public boolean ping() {
         System.out.println("I am alive");
         return true;
     }

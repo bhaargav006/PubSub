@@ -102,14 +102,14 @@ public class GroupServer  {
 
         System.out.println("You have been served");
 
-//        int delay = 60;
+        int delay = 60;
 //        scheduler.schedule(task, delay, TimeUnit.SECONDS);
 //        scheduler.shutdown();
-//
-//        request.append(";5105;server.comm;1099");
-//        CommunicateHelper.udpToRemoteServer(request.toString());
-//
-//        System.out.println("You have been served");
+
+        request.append(";5105;server.comm;1099");
+        CommunicateHelper.udpToRemoteServer(request.toString());
+
+        System.out.println("You have been served");
 
         //Deregister the server
 

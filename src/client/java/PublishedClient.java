@@ -10,7 +10,7 @@ public class PublishedClient extends Thread {
     private byte[] buf = new byte[256];
 
     public PublishedClient() throws SocketException {
-        socket = new DatagramSocket(9999);
+        socket = new DatagramSocket(1098);
     }
     public void run() {
         running = true;

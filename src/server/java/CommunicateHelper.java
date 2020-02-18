@@ -13,9 +13,6 @@ public class CommunicateHelper {
     static final ArrayList<String> typeField = new ArrayList<String>(
             Arrays.asList("Sports", "Lifestyle", "Entertainment", "Business", "Technology", "Science", "Politics", "Health"));
 
-    public static void main(String[] args) {
-        udpToClients(null, null, "s");
-    }
 
     public static String generateSubRequest(String publishedArticle){
         StringBuilder generateString
@@ -51,11 +48,11 @@ public class CommunicateHelper {
 
     public static ArrayList<String> getListOfClients(Map<String, ArrayList<String>> clientSubscriptionList, String article){
         ArrayList<String> clientList;
-        clientList = new ArrayList<String>();
+        clientList = new ArrayList<>();
         String toCheck = generateSubRequest(article);
-
-        for(int i=0;i<clientSubscriptionList.size();i++){
-            if(isClientSubscribed(clientSubscriptionList.get(i),toCheck)) {
+        Object[] keys =  clientSubscriptionList.keySet().toArray();
+        for(int i=0;i<keys.length;i++){
+            if(isClientSubscribed(clientSubscriptionList.get(keys[i]),toCheck)) {
                 //Adding IP of client to the list
                 clientList.add(String.valueOf(clientSubscriptionList.keySet().toArray()[i]));
             }
@@ -64,35 +61,54 @@ public class CommunicateHelper {
         return clientList;
     }
 
-    public static void udpToRemoteServer(String message){
+    public static String udpToAndFromRemoteServer(String message) {
+        byte[] buf = new byte[1024];
+        DatagramSocket ds = udpToRemoteServer(message);
+        DatagramPacket dp = new DatagramPacket(buf, buf.length);
+        try {
+            ds.receive(dp);
+            String received
+                    = new String(dp.getData(), 0, dp.getLength());
+            System.out.print(received);
+            return received;
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static DatagramSocket udpToRemoteServer(String message) {
         try {
             DatagramSocket ds = new DatagramSocket();
             byte[] b = message.getBytes();
 
-            //IP and Port, not so sure.
-            InetAddress ir = InetAddress.getByName("10.131.193.209");
-            DatagramPacket dp = new DatagramPacket(b,b.length, ir, 5105);
+            /* Hard coding the public IP of registry server here. This is
+                to send UDP messages to that IP at port 5105
+            * */
+            InetAddress ir = InetAddress.getByName("134.84.182.49");
+            DatagramPacket dp = new DatagramPacket(b, b.length, ir, 5105);
             ds.send(dp);
+            return ds;
         } catch (SocketException | UnknownHostException e) {
             System.out.println("Socket Exception trying to connect to Remote Server");
         } catch (IOException e) {
             System.out.println("Couldn't send the package to the Remote Server");
         }
-
+        return null;
     }
 
     public static void udpToClients(List<String> subscribers, Map<String, Integer> portLookup, String message) {
         try {
             DatagramSocket ds = new DatagramSocket();
             byte[] b = new byte[PACKAGE_SIZE];
-//            message = "UDP change";
             b = message.getBytes();
-//            InetAddress address = InetAddress.getByName("10.131.123.169");
-//            DatagramPacket dp = new DatagramPacket(b,b.length,address, 9999);
-//            ds.send(dp);
+
             for(int i=0;i<subscribers.size();i++){
                 InetAddress address = InetAddress.getByName(subscribers.get(i));
-                DatagramPacket dp = new DatagramPacket(b,b.length,address, 9999);
+
+                System.out.println("Sending message: " + message + " to " + subscribers.get(i) + " at port " + portLookup.get(subscribers.get(i)));
+                DatagramPacket dp = new DatagramPacket(b,b.length,address,portLookup.get(subscribers.get(i)));
                 ds.send(dp);
             }
         } catch (SocketException | UnknownHostException e) {
@@ -104,8 +120,15 @@ public class CommunicateHelper {
     }
 
     public static String getMessage(String article) {
+        if(article.length() >120) {
+            article = article.substring(0,120);
+        }
+        else if (article.length() < 120) {
+            article = String.format("%1$-120s", article);
+        }
         String[] fieldValues = article.split(";");
         return fieldValues[fieldValues.length-1];
+
     }
 
     public static Boolean validateString(String article) {

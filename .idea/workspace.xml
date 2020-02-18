@@ -2,10 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="85c93cb0-ebad-473e-8969-d905ef247100" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/java/GroupServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/java/GroupServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/java/GroupServerHeartbeat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/java/GroupServerHeartbeat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server/java/CommunicateHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/java/CommunicateHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server/java/CommunicateImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/java/CommunicateImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,11 +17,6 @@
         <option value="Class" />
       </list>
     </option>
-  </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>rebin</find>
-    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />

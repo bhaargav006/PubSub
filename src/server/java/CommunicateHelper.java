@@ -48,11 +48,11 @@ public class CommunicateHelper {
 
     public static ArrayList<String> getListOfClients(Map<String, ArrayList<String>> clientSubscriptionList, String article){
         ArrayList<String> clientList;
-        clientList = new ArrayList<String>();
+        clientList = new ArrayList<>();
         String toCheck = generateSubRequest(article);
-
-        for(int i=0;i<clientSubscriptionList.size();i++){
-            if(isClientSubscribed(clientSubscriptionList.get(i),toCheck)) {
+        Object[] keys =  clientSubscriptionList.keySet().toArray();
+        for(int i=0;i<keys.length;i++){
+            if(isClientSubscribed(clientSubscriptionList.get(keys[i]),toCheck)) {
                 //Adding IP of client to the list
                 clientList.add(String.valueOf(clientSubscriptionList.keySet().toArray()[i]));
             }
@@ -100,11 +100,13 @@ public class CommunicateHelper {
         try {
             DatagramSocket ds = new DatagramSocket();
             byte[] b = new byte[PACKAGE_SIZE];
-            message = "UDP change";
             b = message.getBytes();
+
             for(int i=0;i<subscribers.size();i++){
                 InetAddress address = InetAddress.getByName(subscribers.get(i));
-                DatagramPacket dp = new DatagramPacket(b,b.length,address, 9999);
+
+                System.out.println("Sending message: " + message + " to " + subscribers.get(i) + " at port " + portLookup.get(subscribers.get(i)));
+                DatagramPacket dp = new DatagramPacket(b,b.length,address,portLookup.get(subscribers.get(i)));
                 ds.send(dp);
             }
         } catch (SocketException | UnknownHostException e) {
@@ -139,7 +141,7 @@ public class CommunicateHelper {
         return true;
     }
 
-    public Boolean validatePublisherString(String article) {
+    public static Boolean validatePublisherString(String article) {
         String[] stringToCheck = article.split(";");
         if(stringToCheck.length <= 0)
             return false;

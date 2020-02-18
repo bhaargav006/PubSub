@@ -100,7 +100,7 @@ public class CommunicateImpl extends UnicastRemoteObject implements Communicate 
     }
 
     public boolean publish(String Article, String IP, int Port) throws RemoteException {
-        if(!CommunicateHelper.validateString(Article)){
+        if(!CommunicateHelper.validatePublisherString(Article)){
             System.out.println("Invalid publish request: " + Article);
             return false;
         }

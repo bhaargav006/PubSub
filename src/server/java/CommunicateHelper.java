@@ -61,9 +61,9 @@ public class CommunicateHelper {
         return clientList;
     }
 
-    public static String udpToAndFromRemoteServer(String message) {
+    public static String udpToAndFromRemoteServer(String message, String ip) {
         byte[] buf = new byte[1024];
-        DatagramSocket ds = udpToRemoteServer(message);
+        DatagramSocket ds = udpToRemoteServer(message, ip);
         DatagramPacket dp = new DatagramPacket(buf, buf.length);
         try {
             ds.receive(dp);
@@ -78,7 +78,7 @@ public class CommunicateHelper {
         return null;
     }
 
-    public static DatagramSocket udpToRemoteServer(String message) {
+    public static DatagramSocket udpToRemoteServer(String message, String ip) {
         try {
             DatagramSocket ds = new DatagramSocket();
             byte[] b = message.getBytes();
@@ -86,7 +86,8 @@ public class CommunicateHelper {
             /* Hard coding the public IP of registry server here. This is
                 to send UDP messages to that IP at port 5105
             * */
-            InetAddress ir = InetAddress.getByName("134.84.182.49");
+            //InetAddress ir = InetAddress.getByName("134.84.182.49");
+            InetAddress ir = InetAddress.getByName(ip);
             DatagramPacket dp = new DatagramPacket(b, b.length, ir, 5105);
             ds.send(dp);
             return ds;

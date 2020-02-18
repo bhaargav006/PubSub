@@ -17,7 +17,7 @@ public class TestClient2 {
 
         //Needs to get Server IP and Port from Registry Server
 
-
+        String ipRegistry = args[0];
         new PublishedClient().start();
 
         //Getlist from the remote registry
@@ -43,7 +43,7 @@ public class TestClient2 {
         getListRequest.append(ip);
         getListRequest.append(";1098");
 
-        String ipAddressOfGSrvs = CommunicateHelper.udpToAndFromRemoteServer(getListRequest.toString());
+        String ipAddressOfGSrvs = CommunicateHelper.udpToAndFromRemoteServer(getListRequest.toString(),ipRegistry);
         String [] splitAdresses = ipAddressOfGSrvs.split(";");
         List<String>ipAddrAndPort = new ArrayList<>();
         for(int i = 0; i < splitAdresses.length; i=i+2) {

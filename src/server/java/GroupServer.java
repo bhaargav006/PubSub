@@ -1,7 +1,7 @@
-import java.net.InetAddress;
-import java.net.MalformedURLException;
-import java.net.SocketException;
-import java.net.UnknownHostException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.*;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -25,7 +25,28 @@ public class GroupServer  {
         request.append("Register;RMI;");
 
         InetAddress ib = InetAddress.getLocalHost();
-        request.append("134.84.182.45");
+
+        /* If running locally, from our personal machines, we can use getLocalhost to
+        get the local IPs that is passed for both UDP communication or RMI communication.
+
+        But in the case of CSE lab machines, we need to send the public ip for the machines to
+        communicate.
+         */
+
+        //code for getting the public ip
+        URL whatismyip = new URL("http://checkip.amazonaws.com");
+        BufferedReader in = null;
+        String ip="";
+        try {
+            in = new BufferedReader(new InputStreamReader(
+                    whatismyip.openStream()));
+             ip= in.readLine();
+        } catch (IOException e) {
+            System.out.println("Public IP not working properly. ");
+        }
+
+        System.out.println("My public IP is " + ip);
+        request.append(ip);
 
 
         request.append(";9999;server.comm;1099");
@@ -42,7 +63,6 @@ public class GroupServer  {
         // Format is “Register;RMI;IP;Port;BindingName;Port for RMI”
 
 
-
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         Runnable task = new Runnable() {
             @Override
@@ -53,8 +73,20 @@ public class GroupServer  {
                 InetAddress ib = null;
                 try {
                     ib = InetAddress.getLocalHost();
-                    deregisterRequest.append(ib.getHostAddress());
-                } catch (UnknownHostException e) {
+
+                    URL whatismyip = new URL("http://checkip.amazonaws.com");
+                    BufferedReader in = null;
+                    String ip="";
+                    try {
+                        in = new BufferedReader(new InputStreamReader(
+                                whatismyip.openStream()));
+                        ip= in.readLine();
+                    } catch (IOException e) {
+                        System.out.println("Public IP not working properly. ");
+                    }
+
+                    deregisterRequest.append(ip);
+                } catch (UnknownHostException | MalformedURLException e) {
                     e.printStackTrace();
                 }
                 deregisterRequest.append(";9999");

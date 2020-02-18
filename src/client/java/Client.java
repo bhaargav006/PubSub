@@ -1,7 +1,7 @@
-import java.net.InetAddress;
-import java.net.MalformedURLException;
-import java.net.SocketException;
-import java.net.UnknownHostException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.*;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -26,7 +26,21 @@ public class Client {
         StringBuilder getListRequest = new StringBuilder("");
         getListRequest.append("GetList;RMI;");
         InetAddress ia = InetAddress.getLocalHost();
-        getListRequest.append("134.84.182.48");
+
+        URL whatismyip = new URL("http://checkip.amazonaws.com");
+        BufferedReader in = null;
+        String ip="";
+        try {
+            in = new BufferedReader(new InputStreamReader(
+                    whatismyip.openStream()));
+            ip= in.readLine();
+        } catch (IOException e) {
+            System.out.println("Public IP not working properly. ");
+        }
+
+        System.out.println("My public IP is " + ip);
+
+        getListRequest.append(ip);
         getListRequest.append(";1098");
 
         String ipAddressOfGSrvs = CommunicateHelper.udpToAndFromRemoteServer(getListRequest.toString());
@@ -53,17 +67,17 @@ public class Client {
             comm = (Communicate) registry.lookup("server.comm");
 
 
-            joinAllowed = comm.join("134.84.182.48",1098);
+            joinAllowed = comm.join(ip,1098);
 
             //joinAllowed = comm.join(ia.getHostAddress(),1098);
 
             i++;
         }
         comm.ping();
-        comm.subscribe(ia.getHostAddress(),1098, "Science;;UMN;");
+        comm.subscribe(ip,1098, "Science;;UMN;");
     //    comm.unSubscribe(ia.getHostAddress(),9999, "Lifestyle;Soumya;UMN;");
         Thread.sleep(200000);
-        comm.publish("Lifestyle;Soumya;UMN; DistributedSystemsLab",ia.getHostAddress(),1098);
+        comm.publish("Lifestyle;Soumya;UMN; DistributedSystemsLab",ip,1098);
     //    comm.leave(ia.getHostAddress(),9999);
 
     }

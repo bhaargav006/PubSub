@@ -83,7 +83,9 @@ public class CommunicateHelper {
             DatagramSocket ds = new DatagramSocket();
             byte[] b = message.getBytes();
 
-            //IP and Port, not so sure.
+            /* Hard coding the public IP of registry server here. This is
+                to send UDP messages to that IP at port 5105
+            * */
             InetAddress ir = InetAddress.getByName("134.84.182.49");
             DatagramPacket dp = new DatagramPacket(b, b.length, ir, 5105);
             ds.send(dp);

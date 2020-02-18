@@ -75,9 +75,11 @@ public class Client {
         }
         comm.ping();
         comm.subscribe(ip,1098, "Science;;UMN;");
-    //    comm.unSubscribe(ia.getHostAddress(),9999, "Lifestyle;Soumya;UMN;");
-        Thread.sleep(200000);
-        comm.publish("Lifestyle;Soumya;UMN; DistributedSystemsLab",ip,1098);
+        Thread.sleep(20000);
+        //Wrong unsubscribe request
+        comm.unSubscribe(ip,1098, "Lifestyle;Soumya;UMN;");
+        comm.subscribe(ip, 1098, "Sports;;;");
+
     //    comm.leave(ia.getHostAddress(),9999);
 
     }

@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="85c93cb0-ebad-473e-8969-d905ef247100" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server/java/CommunicateHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/java/CommunicateHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server/java/CommunicateImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/java/CommunicateImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

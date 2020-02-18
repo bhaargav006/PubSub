@@ -100,15 +100,13 @@ public class CommunicateHelper {
         try {
             DatagramSocket ds = new DatagramSocket();
             byte[] b = new byte[PACKAGE_SIZE];
-            //message = "UDP change";
             b = message.getBytes();
 
             for(int i=0;i<subscribers.size();i++){
-
                 InetAddress address = InetAddress.getByName(subscribers.get(i));
-                System.out.println("Sending message: " + message + " to " + subscribers.get(i) );
-                DatagramPacket dp = new DatagramPacket(b,b.length,address, portLookup.get(subscribers.get(i)));
 
+                System.out.println("Sending message: " + message + " to " + subscribers.get(i) + " at port " + portLookup.get(subscribers.get(i)));
+                DatagramPacket dp = new DatagramPacket(b,b.length,address,portLookup.get(subscribers.get(i)));
                 ds.send(dp);
             }
         } catch (SocketException | UnknownHostException e) {

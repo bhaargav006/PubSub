@@ -54,19 +54,16 @@ public class CommunicateImpl extends UnicastRemoteObject implements Communicate 
         }
         // Map currently take the key as client IP address and value as the list of subscriptions for the client.
         // If mapping already exists, dont add? -> can add this feature
-        try{
-            //The client doesn't need the IP to connect. We can only figure this out when we
-            //test it in multiple machines
-            String clientIP = RemoteServer.getClientHost();
-            if(!clientSubscriptionList.containsKey(clientIP)){
-                clientSubscriptionList.put(clientIP, new ArrayList<String>());
-            }
-            clientSubscriptionList.get(clientIP).add(article);
-            System.out.println("Client: " + clientIP + " is subscribed to " + article);
-        } catch (ServerNotActiveException e1) {
-            System.out.println("Could not get Client IP");
-            return false;
+
+        //The client doesn't need the IP to connect. We can only figure this out when we
+        //test it in multiple machines
+        //String clientIP = RemoteServer.getClientHost();
+        if(!clientSubscriptionList.containsKey(IP)){
+            clientSubscriptionList.put(IP, new ArrayList<String>());
         }
+        clientSubscriptionList.get(IP).add(article);
+        System.out.println("Client: " + IP + " is subscribed to " + article);
+
         return true;
     }
 
@@ -74,37 +71,34 @@ public class CommunicateImpl extends UnicastRemoteObject implements Communicate 
         /*A particular article can be removed from the list of subscriptions present for the client.
           If the request article for unsubscribing does not match with the value present in the list,
           we term it as invalid*/
-        try{
-            String clientIP = RemoteServer.getClientHost();
-            if(clientSubscriptionList.containsKey(clientIP)){
-                ArrayList<String> clientSubscribedArticles = clientSubscriptionList.get(clientIP);
-                if(clientSubscribedArticles.contains(article)){
-                    clientSubscribedArticles.remove(article);
-                    clientSubscriptionList.put(clientIP, clientSubscribedArticles);
-                    System.out.println("Client: " + clientIP + " is unsubscribed from " + article);
-                }
-                else{
-                    System.out.println("Invalid unsubscribing request");
-                    return false;
-                }
+
+
+        if(clientSubscriptionList.containsKey(IP)){
+            ArrayList<String> clientSubscribedArticles = clientSubscriptionList.get(IP);
+            if(clientSubscribedArticles.contains(article)){
+                clientSubscribedArticles.remove(article);
+                clientSubscriptionList.put(IP, clientSubscribedArticles);
+                System.out.println("Client: " + IP + " is unsubscribed from " + article);
             }
             else{
-                System.out.println("Client is not subscribed or has left the server already");
+                System.out.println("Invalid unsubscribing request");
                 return false;
             }
-        } catch (ServerNotActiveException e) {
-            System.out.println("Could not get Client IP");
+        }
+        else{
+            System.out.println("Client is not subscribed or has left the server already");
             return false;
         }
+
         return true;
     }
 
     public boolean publish(String Article, String IP, int Port) throws RemoteException {
-        if(!CommunicateHelper.validateString(Article)){
-            System.out.println("Invalid publish request: " + Article);
-            return false;
-        }
-        System.out.println("Publishing article: " + Article + " to server: "+ IP + " at port: "+ Port);
+//        if(!CommunicateHelper.validateString(Article)){
+//            System.out.println("Invalid publish request: " + Article);
+//            return false;
+//        }
+        System.out.println("Publishing article: " + Article );
         try{
             String clientIP = RemoteServer.getClientHost();
             currArticle = Article;

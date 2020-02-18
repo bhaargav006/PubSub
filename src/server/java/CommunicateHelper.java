@@ -61,31 +61,39 @@ public class CommunicateHelper {
         return clientList;
     }
 
-    public static void udpToRemoteServer(String message) {
+    public static String udpToAndFromRemoteServer(String message) {
         byte[] buf = new byte[1024];
+        DatagramSocket ds = udpToRemoteServer(message);
+        DatagramPacket dp = new DatagramPacket(buf, buf.length);
+        try {
+            ds.receive(dp);
+            String received
+                    = new String(dp.getData(), 0, dp.getLength());
+            System.out.print(received);
+            return received;
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static DatagramSocket udpToRemoteServer(String message) {
         try {
             DatagramSocket ds = new DatagramSocket();
             byte[] b = message.getBytes();
 
             //IP and Port, not so sure.
-            InetAddress ir = InetAddress.getByName("10.131.123.169");
+            InetAddress ir = InetAddress.getByName("10.131.193.209");
             DatagramPacket dp = new DatagramPacket(b, b.length, ir, 5105);
             ds.send(dp);
-            boolean running = true;
-
-            dp = new DatagramPacket(buf, buf.length);
-            ds.receive(dp);
-            String received
-                    = new String(dp.getData(), 0, dp.getLength());
-            System.out.print(received);
-
-
+            return ds;
         } catch (SocketException | UnknownHostException e) {
             System.out.println("Socket Exception trying to connect to Remote Server");
         } catch (IOException e) {
             System.out.println("Couldn't send the package to the Remote Server");
         }
-
+        return null;
     }
 
     public static void udpToClients(List<String> subscribers, Map<String, Integer> portLookup, String message) {

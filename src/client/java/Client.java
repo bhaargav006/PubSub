@@ -51,6 +51,7 @@ public class Client {
             comm = (Communicate) registry.lookup("server.comm");
 
             joinAllowed = comm.join(grpServerIP,port);
+            i++;
         }
         comm.ping();
         comm.subscribe(grpServerIP,port, "Lifestyle;Soumya;UMN;");

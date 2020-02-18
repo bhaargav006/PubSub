@@ -13,9 +13,6 @@ public class CommunicateHelper {
     static final ArrayList<String> typeField = new ArrayList<String>(
             Arrays.asList("Sports", "Lifestyle", "Entertainment", "Business", "Technology", "Science", "Politics", "Health"));
 
-    public static void main(String[] args) {
-        udpToClients(null, null, "s");
-    }
 
     public static String generateSubRequest(String publishedArticle){
         StringBuilder generateString
@@ -64,15 +61,25 @@ public class CommunicateHelper {
         return clientList;
     }
 
-    public static void udpToRemoteServer(String message){
+    public static void udpToRemoteServer(String message) {
+        byte[] buf = new byte[1024];
         try {
             DatagramSocket ds = new DatagramSocket();
             byte[] b = message.getBytes();
 
             //IP and Port, not so sure.
-            InetAddress ir = InetAddress.getLocalHost();
-            DatagramPacket dp = new DatagramPacket(b,b.length, ir, 5105);
+            InetAddress ir = InetAddress.getByName("10.131.123.169");
+            DatagramPacket dp = new DatagramPacket(b, b.length, ir, 5105);
             ds.send(dp);
+            boolean running = true;
+
+            dp = new DatagramPacket(buf, buf.length);
+            ds.receive(dp);
+            String received
+                    = new String(dp.getData(), 0, dp.getLength());
+            System.out.print(received);
+
+
         } catch (SocketException | UnknownHostException e) {
             System.out.println("Socket Exception trying to connect to Remote Server");
         } catch (IOException e) {
@@ -87,14 +94,11 @@ public class CommunicateHelper {
             byte[] b = new byte[PACKAGE_SIZE];
             message = "UDP change";
             b = message.getBytes();
-            InetAddress address = InetAddress.getByName("10.131.123.169");
-            DatagramPacket dp = new DatagramPacket(b,b.length,address, 9999);
-            ds.send(dp);
-//            for(int i=0;i<subscribers.size();i++){
-//                InetAddress address = InetAddress.getByName(subscribers.get(i));
-//                DatagramPacket dp = new DatagramPacket(b,b.length,address, 9999);
-//                ds.send(dp);
-//            }
+            for(int i=0;i<subscribers.size();i++){
+                InetAddress address = InetAddress.getByName(subscribers.get(i));
+                DatagramPacket dp = new DatagramPacket(b,b.length,address, 9999);
+                ds.send(dp);
+            }
         } catch (SocketException | UnknownHostException e) {
             System.out.println("Socket error while sending UDP packets to Clients");
         } catch (IOException e) {

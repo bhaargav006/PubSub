@@ -6,6 +6,7 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +20,10 @@ import java.util.concurrent.TimeUnit;
 public class GroupServer  {
     public static void main(String[] args) throws RemoteException, MalformedURLException, UnknownHostException, SocketException {
 
+       final String ipRegistry = args[0];
         //Register
+
+        System.out.println("Registry Service " + ipRegistry);
 
         final StringBuilder request = new StringBuilder("");
         request.append("Register;RMI;");
@@ -50,13 +54,14 @@ public class GroupServer  {
 
 
         request.append(";9999;server.comm;1099");
-        CommunicateHelper.udpToRemoteServer(request.toString());
+        CommunicateHelper.udpToRemoteServer(request.toString(),ipRegistry);
 
         //Heartbeat
 
         new GroupServerHeartbeat().start();
         LocateRegistry.createRegistry(1099);
         Communicate comm = new CommunicateImpl();
+       // Communicate communicate = (Communicate) UnicastRemoteObject.exportObject(comm, 0);
         Naming.rebind("server.comm", comm);
 
         //Need to register to Registry server
@@ -90,7 +95,7 @@ public class GroupServer  {
                     e.printStackTrace();
                 }
                 deregisterRequest.append(";9999");
-                CommunicateHelper.udpToRemoteServer(deregisterRequest.toString());
+                CommunicateHelper.udpToRemoteServer(deregisterRequest.toString(),ipRegistry);
                 try {
                     Naming.unbind("server.comm");
                 } catch (RemoteException | NotBoundException | MalformedURLException e) {
@@ -105,9 +110,9 @@ public class GroupServer  {
         int delay = 60;
 //        scheduler.schedule(task, delay, TimeUnit.SECONDS);
 //        scheduler.shutdown();
-
+        System.out.print(request.toString());
         request.append(";5105;server.comm;1099");
-        CommunicateHelper.udpToRemoteServer(request.toString());
+        CommunicateHelper.udpToRemoteServer(request.toString(),ipRegistry);
 
         System.out.println("You have been served");
 

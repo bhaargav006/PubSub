@@ -52,13 +52,18 @@ public class Client {
             registry = LocateRegistry.getRegistry(grpServerIP);
             comm = (Communicate) registry.lookup("server.comm");
 
+
             joinAllowed = comm.join("134.84.182.48",1098);
+
+            //joinAllowed = comm.join(ia.getHostAddress(),1098);
+
             i++;
         }
         comm.ping();
-        comm.subscribe(grpServerIP,port, "Lifestyle;Soumya;UMN;");
+        comm.subscribe(ia.getHostAddress(),1098, "Science;;UMN;");
     //    comm.unSubscribe(ia.getHostAddress(),9999, "Lifestyle;Soumya;UMN;");
-        comm.publish("Science;;UMN; You're jobless",ia.getHostAddress(),1099);
+        Thread.sleep(200000);
+        comm.publish("Lifestyle;Soumya;UMN; DistributedSystemsLab",ia.getHostAddress(),1098);
     //    comm.leave(ia.getHostAddress(),9999);
 
     }

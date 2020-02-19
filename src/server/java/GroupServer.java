@@ -54,7 +54,7 @@ public class GroupServer  {
         System.out.println("My public IP is " + ip);
         request.append(ip);
 
-
+        System.setProperty("java.rmi.server.hostname",ip);
         request.append(";9999;server.comm;1099");
         CommunicateHelper.udpToRemoteServer(request.toString(),ipRegistry);
 

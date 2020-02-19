@@ -27,13 +27,13 @@ public class Client {
                 System.out.println("Not able to connect to Group server");
                 return;
             }
-            comm.subscribe(InetAddress.getLocalHost().getHostAddress(), 1098, "Science;;UMN;");
+            comm.subscribe(ip, 1098, "Science;;UMN;");
             Thread.sleep(20000);
             //Wrong unsubscribe request
-            comm.unSubscribe(InetAddress.getLocalHost().getHostAddress(), 1098, "Lifestyle;Soumya;UMN;");
-            comm.subscribe(InetAddress.getLocalHost().getHostAddress(), 1098, "Sports;;;");
+            comm.unSubscribe(ip, 1098, "Lifestyle;Soumya;UMN;");
+            comm.subscribe(ip, 1098, "Sports;;;");
 
-            comm.publish("Science;;UMN;Some message", InetAddress.getLocalHost().getHostAddress(), 1098);
+            comm.publish("Science;;UMN;Some message", ip, 1098);
             //    comm.leave(ia.getHostAddress(),9999);
 
             PingThread thread = new PingThread(comm);

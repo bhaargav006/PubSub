@@ -1,12 +1,10 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.*;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.util.*;
+import java.util.Map;
 
 public class TestClient1 {
 

@@ -88,16 +88,17 @@ public class CommunicateImpl extends UnicastRemoteObject implements Communicate 
     }
 
     public boolean publish(String Article, String IP, int Port) {
-        if(!CommunicateHelper.validatePublisherString(Article)){
-            System.out.println("Invalid publish request: " + Article);
+        String article = CommunicateHelper.getMessage(Article);
+        if(!CommunicateHelper.validatePublisherString(article)){
+            System.out.println("Invalid publish request: " + article);
             return false;
         }
 
-        currArticle = Article;
-        List<String> subscribers = CommunicateHelper.getListOfClients(clientSubscriptionList, Article);
+        currArticle = article;
+        List<String> subscribers = CommunicateHelper.getListOfClients(clientSubscriptionList, article);
         System.out.println("There are " + subscribers.size() + " clients who are subscribed to this article");
 
-        CommunicateHelper.udpToClients(subscribers, clientList, CommunicateHelper.getMessage(Article));
+        CommunicateHelper.udpToClients(subscribers, clientList, article);
 
         return true;
     }

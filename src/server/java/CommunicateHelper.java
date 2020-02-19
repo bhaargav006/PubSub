@@ -1,11 +1,14 @@
 import com.sun.org.apache.xpath.internal.operations.Bool;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.*;
 
 public class CommunicateHelper {
 
@@ -166,4 +169,65 @@ public class CommunicateHelper {
 
         return true;
     }
+
+    public static String getIP() throws UnknownHostException, MalformedURLException {
+        InetAddress ia = InetAddress.getLocalHost();
+
+        URL whatismyip = new URL("http://checkip.amazonaws.com");
+        BufferedReader in = null;
+        String ip="";
+        try {
+            in = new BufferedReader(new InputStreamReader(
+                    whatismyip.openStream()));
+            ip= in.readLine();
+        } catch (IOException e) {
+            System.out.println("Public IP not working properly. ");
+        }
+
+        System.out.println("My public IP is " + ip);
+        return ip;
+    }
+
+    public static Map<String,Integer> getServerList( String ipRegistry, String ip) throws UnknownHostException, MalformedURLException {
+        StringBuilder getListRequest = new StringBuilder("");
+        getListRequest.append("GetList;RMI;");
+        System.out.println("Registry Service" + ipRegistry);
+
+        getListRequest.append(ip);
+        getListRequest.append(";1098");
+
+        String ipAddressOfGSrvs = CommunicateHelper.udpToAndFromRemoteServer(getListRequest.toString(),ipRegistry);
+        String [] splitAdresses = ipAddressOfGSrvs.split(";");
+        Map<String,Integer>ipAddrAndPort = new HashMap<>();
+        for(int i = 0; i < splitAdresses.length; i=i+2) {
+            if(i+1 >= splitAdresses.length ) continue;
+            ipAddrAndPort.put(splitAdresses[i],Integer.valueOf(splitAdresses[i+1]));
+        }
+        return ipAddrAndPort;
+    }
+
+    public static Communicate connectToGroupServer(Map<String,Integer>  ipAddrAndPort, String ip) throws RemoteException, NotBoundException, UnknownHostException {
+        System.out.println("I am done - Client");
+        boolean joinAllowed = false;
+        int index = 0;
+
+        Communicate comm = null;
+        while (index < ipAddrAndPort.size()) {
+            String serverIP = (String) ipAddrAndPort.keySet().toArray()[index];
+            int port = ipAddrAndPort.get(serverIP);
+            Registry registry = LocateRegistry.getRegistry(serverIP);
+            comm = (Communicate) registry.lookup("server.comm");
+
+            boolean isJoin = comm.join(InetAddress.getLocalHost().getHostAddress(), 1098);
+            if(!isJoin){
+                index++;
+            }
+            else {
+                System.out.println("Joining at " + ip + "listening to port " + 1098);
+                break;
+            }
+        }
+        return comm;
+    }
+
 }

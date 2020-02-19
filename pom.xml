@@ -16,8 +16,6 @@
                 <version>3.8.0</version>
                 <configuration>
                     <release>7</release>
-                    <source>7</source>
-                    <target>7</target>
                 </configuration>
             </plugin>
 

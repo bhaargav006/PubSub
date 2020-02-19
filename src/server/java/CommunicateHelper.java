@@ -216,7 +216,7 @@ public class CommunicateHelper {
             Registry registry = LocateRegistry.getRegistry(serverIP);
             comm = (Communicate) registry.lookup("server.comm");
 
-            boolean isJoin = comm.join(InetAddress.getLocalHost().getHostAddress(), 1098);
+            boolean isJoin = comm.join(ip, 1098);
             if(!isJoin){
                 index++;
             }
